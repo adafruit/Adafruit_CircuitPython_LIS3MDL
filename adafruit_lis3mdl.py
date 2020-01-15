@@ -48,6 +48,7 @@ from micropython import const
 import adafruit_bus_device.i2c_device as i2c_device
 from adafruit_register.i2c_struct import ROUnaryStruct, Struct
 from adafruit_register.i2c_bits import RWBits
+from adafruit_register.i2c_bit import RWBit
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_LSM6DSOX.git"
 
@@ -164,32 +165,25 @@ class LIS3MDL:
     _raw_mag_data = Struct(_LIS3MDL_OUT_X_L, "<hhh")
 
     _range = RWBits(2, _LIS3MDL_CTRL_REG2, 5)
+    _reset = RWBit(_LIS3MDL_CTRL_REG2, 2)
 
     def __init__(self, i2c_bus, address=_LIS3MDL_DEFAULT_ADDRESS):
+        #pylint: disable=no-member
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         if self._chip_id != _LIS3MDL_CHIP_ID:
             raise RuntimeError("Failed to find LIS3MDL - check your wiring!")
         self.reset()
-        #   // set high quality performance mode
-        # setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
-        self._perf_mode = 0b11
-        self.performance_mode = PerformanceMode.MODE_ULTRA #pylint: disable=no-member
+        self.performance_mode = PerformanceMode.MODE_ULTRA
 
-        # // 155Hz default rate
-        # setDataRate(LIS3MDL_DATARATE_155_HZ);
-
-
-        self.range = Range.RANGE_4_GAUSS #pylint: disable=no-member
-
-        # setOperationMode(LIS3MDL_CONTINUOUSMODE);
-        self._operation_mode = 0 # enable, take out of shutdown
+        self.data_rate = Rate.RATE_155_HZ
+        self.range = Range.RANGE_4_GAUSS
+        self._operation_mode = 0 # continuous mode
         sleep(0.010)
+
     def reset(self): #pylint: disable=no-self-use
         """Reset the sensor to the default state set by the library"""
-
-        print("called reset")
-        # reset
-        # sleep(0.010)
+        self._reset = True
+        sleep(0.010)
 
     @property
     def magnetic(self):
