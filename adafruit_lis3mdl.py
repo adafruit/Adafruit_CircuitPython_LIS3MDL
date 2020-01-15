@@ -116,9 +116,29 @@ PerformanceMode.add_values((
     ('MODE_ULTRA', 3, 'Ultra-high Performance', None)
 ))
 class Rate(CV):
-    """Options for `data_rate`"""
+    """Options for `data_rate`
+
+    =============================  ============================================
+    Rate                           Meaning
+    =============================  ============================================
+    ``RATE_0_625_HZ``              0.625 HZ
+    ``RATE_1_25_HZ``               1.25 HZ
+    ``RATE_2_5_HZ``                2.5 HZ
+    ``RATE_5_HZ``                  5 HZ
+    ``RATE_10_HZ``                 10 HZ
+    ``RATE_20_HZ``                 20 HZ
+    ``RATE_40_HZ``                 40 HZ
+    ``RATE_80_HZ``                 80 HZ
+    ``RATE_155_HZ``                155 HZ ( Sets ``PerformanceMode`` to ``MODE_ULTRA``)
+    ``RATE_300_HZ``                300 HZ ( Sets ``PerformanceMode`` to ``MODE_HIGH``)
+    ``RATE_560_HZ``                560 HZ ( Sets ``PerformanceMode`` to ``MODE_MEDIUM``)
+    ``RATE_1000_HZ``               1000 HZ ( Sets ``PerformanceMode`` to ``MODE_LOW_POWER``)
+    =============================  ============================================
+
+    """
     pass #pylint: disable=unnecessary-pass
 
+# The magnetometer data rate, includes FAST_ODR bit
 Rate.add_values((
     ('RATE_0_625_HZ', 0b0000, 0.625, None),
     ('RATE_1_25_HZ', 0b0010, 1.25, None),
@@ -133,19 +153,31 @@ Rate.add_values((
     ('RATE_560_HZ', 0b0101, 560.0, None),
     ('RATE_1000_HZ', 0b0111, 1000.0, None),
 ))
-# /** The magnetometer data rate, includes FAST_ODR bit */
 
-#    = ,   ///<   Hz (FAST_ODR + UHP)
-#    = ,   ///<   Hz (FAST_ODR + HP)
-#    = ,   ///<   Hz (FAST_ODR + MP)
-#    = ,  ///<   Hz (FAST_ODR + LP)
-# } lis3mdl_dataRate_t;
+class OperationMode(CV):
+    """Options for `operation_mode`
 
+    =============================  ============================================
+    Operation Mode                 Meaning
+    =============================  ============================================
+    ``OperationMode.CONTINUOUS``     Measurements are made continuously at the given `data_rate`
+    ``OperationMode.SINGLE``         Setting to ``SINGLE`` takes a single measurement.
+    ``OperationMode.POWER_DOWN``     Halts measurements. `magnetic` will return the last measurement
+    =============================  ============================================
+
+"""
+    pass #pylint: disable=unnecessary-pass
+
+OperationMode.add_values((
+    ('CONTINUOUS', 0b00, 'Continuous', None),
+    ('SINGLE', 0b01, 'Single', None),
+    ('POWER_DOWN', 0b11, 'Power Down', None)
+))
 # /** The magnetometer operation mode */
 # typedef enum {
-#   LIS3MDL_CONTINUOUSMODE = 0b00, ///< Continuous conversion
-#   LIS3MDL_SINGLEMODE = 0b01,     ///< Single-shot conversion
-#   LIS3MDL_POWERDOWNMODE = 0b11,  ///< Powered-down mode
+#   LIS3MDL_CONTINUOUSMODE = , ///< Continuous conversion
+#   LIS3MDL_SINGLEMODE = ,     ///< Single-shot conversion
+#   LIS3MDL_POWERDOWNMODE = ,  ///< Powered-down mode
 # } lis3mdl_operationmode_t;
 
 class LIS3MDL:
@@ -172,12 +204,14 @@ class LIS3MDL:
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         if self._chip_id != _LIS3MDL_CHIP_ID:
             raise RuntimeError("Failed to find LIS3MDL - check your wiring!")
+
         self.reset()
         self.performance_mode = PerformanceMode.MODE_ULTRA
 
         self.data_rate = Rate.RATE_155_HZ
         self.range = Range.RANGE_4_GAUSS
-        self._operation_mode = 0 # continuous mode
+        self.operation_mode = OperationMode.CONTINUOUS
+
         sleep(0.010)
 
     def reset(self): #pylint: disable=no-self-use
@@ -187,7 +221,9 @@ class LIS3MDL:
 
     @property
     def magnetic(self):
-        """How do they even work?!"""
+        """The processed magnetometer sensor values.
+        A 3-tuple of X, Y, Z axis values in microteslas that are signed floats.
+        """
 
         raw_mag_data = self._raw_mag_data
         x = self._scale_mag_data(raw_mag_data[0])
@@ -248,3 +284,16 @@ class LIS3MDL:
             raise AttributeError("`performance_mode` must be a `PerformanceMode`")
         self._perf_mode = value
         self._z_perf_mode = value
+
+    @property
+    def operation_mode(self):
+        """The operating mode for the sensor, controlling how measurements are taken.
+        Must be an `OperationMode`. See the the `OperationMode` document for additional details
+        """
+        return self._operation_mode
+
+    @operation_mode.setter
+    def operation_mode(self, value):
+        if not OperationMode.is_valid(value):
+            raise AttributeError("operation mode must be a OperationMode")
+        self._operation_mode = value
