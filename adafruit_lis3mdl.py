@@ -104,41 +104,37 @@ Range.add_values((
     ('RANGE_16_GAUSS', 3, 16, 1711)
 ))
 
+class PerformanceMode(CV):
+    """Options for `performance_mode` """
+    pass #pylint: disable=unnecessary-pass
 
-# lis3mdl_range_t range = getRange();
-# float scale = 1; // LSB per gauss
-# if (range == LIS3MDL_RANGE_16_GAUSS)
-#     scale = 1711;
-# if (range == LIS3MDL_RANGE_12_GAUSS)
-#     scale = 2281;
-# if (range == LIS3MDL_RANGE_8_GAUSS)
-#     scale = 3421;
-# if (range == LIS3MDL_RANGE_4_GAUSS)
-#     scale = 6842;
+PerformanceMode.add_values((
+    ('MODE_LOW_POWER', 0, 'Low Power', None),
+    ('MODE_MEDIUM', 1, 'Medium Power', None),
+    ('MODE_HIGH', 2, 'High Power', None),
+    ('MODE_ULTRA', 3, 'Ultra-high Power', None)
+))
+class Rate(CV):
+    """Options for `data_rate`"""
+    pass #pylint: disable=unnecessary-pass
 
+Rate.add_values((
+    ('RATE_0_625_HZ', 0b0000, 0.625, None),
+    ('RATE_1_25_HZ', 0b0010, 1.25, None),
+    ('RATE_2_5_HZ', 0b0100, 2.5, None),
+    ('RATE_5_HZ', 0b0110, 5.0, None),
+    ('RATE_10_HZ', 0b1000, 10.0, None),
+    ('RATE_20_HZ', 0b1010, 20.0, None),
+    ('RATE_40_HZ', 0b1100, 40.0, None),
+    ('RATE_80_HZ', 0b1110, 80.0, None)
+))
 # /** The magnetometer data rate, includes FAST_ODR bit */
-# typedef enum {
-#   LIS3MDL_DATARATE_0_625_HZ = 0b0000, ///<  0.625 Hz
-#   LIS3MDL_DATARATE_1_25_HZ = 0b0010,  ///<  1.25 Hz
-#   LIS3MDL_DATARATE_2_5_HZ = 0b0100,   ///<  2.5 Hz
-#   LIS3MDL_DATARATE_5_HZ = 0b0110,     ///<  5 Hz
-#   LIS3MDL_DATARATE_10_HZ = 0b1000,    ///<  10 Hz
-#   LIS3MDL_DATARATE_20_HZ = 0b1010,    ///<  20 Hz
-#   LIS3MDL_DATARATE_40_HZ = 0b1100,    ///<  40 Hz
-#   LIS3MDL_DATARATE_80_HZ = 0b1110,    ///<  80 Hz
-#   LIS3MDL_DATARATE_155_HZ = 0b0001,   ///<  155 Hz (FAST_ODR + UHP)
-#   LIS3MDL_DATARATE_300_HZ = 0b0011,   ///<  300 Hz (FAST_ODR + HP)
-#   LIS3MDL_DATARATE_560_HZ = 0b0101,   ///<  560 Hz (FAST_ODR + MP)
-#   LIS3MDL_DATARATE_1000_HZ = 0b0111,  ///<  1000 Hz (FAST_ODR + LP)
-# } lis3mdl_dataRate_t;
 
-# /** The magnetometer performance mode */
-# typedef enum {
-#   LIS3MDL_LOWPOWERMODE = 0b00,  ///< Low power mode
-#   LIS3MDL_MEDIUMMODE = 0b01,    ///< Medium performance mode
-#   LIS3MDL_HIGHMODE = 0b10,      ///< High performance mode
-#   LIS3MDL_ULTRAHIGHMODE = 0b11, ///< Ultra-high performance mode
-# } lis3mdl_performancemode_t;
+#   RATE_155_HZ = 0b0001,   ///<  155 Hz (FAST_ODR + UHP)
+#   RATE_300_HZ = 0b0011,   ///<  300 Hz (FAST_ODR + HP)
+#   RATE_560_HZ = 0b0101,   ///<  560 Hz (FAST_ODR + MP)
+#   RATE_1000_HZ = 0b0111,  ///<  1000 Hz (FAST_ODR + LP)
+# } lis3mdl_dataRate_t;
 
 # /** The magnetometer operation mode */
 # typedef enum {
@@ -159,7 +155,7 @@ class LIS3MDL:
 
     _operation_mode = RWBits(2, _LIS3MDL_CTRL_REG3, 0)
 
-    _data_rate = RWBits(3, _LIS3MDL_CTRL_REG1, 2)
+    _data_rate = RWBits(4, _LIS3MDL_CTRL_REG1, 1)
 
     _raw_mag_data = Struct(_LIS3MDL_OUT_X_L, "<hhh")
 
@@ -173,7 +169,8 @@ class LIS3MDL:
         #   // set high quality performance mode
         # setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
         self._perf_mode = 0b11
-        self._z_perf_mode = 0b11
+        self.performance_mode = PerformanceMode.MODE_ULTRA #pylint: disable=no-member
+
         # // 155Hz default rate
         # setDataRate(LIS3MDL_DATARATE_155_HZ);
 
@@ -218,15 +215,37 @@ class LIS3MDL:
 
         sleep(0.010)
 
-    # @property
-    # def data_rate(self):
-    #     """The rate at which the sensor takes measurements. Must be a ``Rate``"""
-    #     return self._data_rate
+    @property
+    def data_rate(self):
+        """The rate at which the sensor takes measurements. Must be a ``Rate``"""
+        return self._data_rate
 
-    # @data_rate.setter
-    # def data_rate(self, value):
-    #     check value is valid
-    #     set performance mode
-    #     sleep(0.010)
-    #
-    #     self._data_rate = value
+    @data_rate.setter
+    def data_rate(self, value):
+        # if
+        # if current_data_rate is Rate.RATE_155_HZ:
+        #     self.performance_mode = Mode.MODE_ULTRA
+        # if current_data_rate is Rate.RATE_300_H:
+        #     self.performance_mode = Mode.MODE_HIGH
+        # if current_data_rate is Rate.RATE_560_HZ:
+        #     self.performance_mode = Mode.MODE_MEDIUM
+        # if current_data_rate is Rate.RATE_1000_HZ:
+        #     self.performance_mode = Mode.MODE_LOW_POWER
+        # sleep(0.010)
+        if not Rate.is_valid(value):
+            raise AttributeError("`data_rate` must be a `Rate`")
+        self._data_rate = value
+
+    @property
+    def performance_mode(self):
+        """Sets the 'performance mode' of the sensor. Must be a `PerformanceMode`.
+           Note that `performance_mode` affects the available data rate and will be
+           automatically changed by setting ``data_rate`` to certain values."""
+
+        return self._data_rate
+
+    @performance_mode.setter
+    def performance_mode(self, value):
+        #TODO: check value
+        self._perf_mode = value
+        self._z_perf_mode = value
