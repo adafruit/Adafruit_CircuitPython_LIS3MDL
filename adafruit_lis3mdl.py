@@ -43,7 +43,7 @@ Implementation Notes
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 * Adafruit's Register library: https://github.com/adafruit/Adafruit_CircuitPython_Register
 """
-
+from time import sleep
 from micropython import const
 import adafruit_bus_device.i2c_device as i2c_device
 from adafruit_register.i2c_struct import ROUnaryStruct, Struct
@@ -73,13 +73,36 @@ _LIS3MDL_INT_THS_L = const(0x32) # Low byte of the irq threshold
 
 _GAUSS_TO_MT = 0.1 #1 Gauss [G] =   0.1 Millitesla [mT]
 
-# /** The magnetometer ranges */
-# typedef enum {
-#   LIS3MDL_RANGE_4_GAUSS = 0b00,  ///< +/- 4g (default value)
-#   LIS3MDL_RANGE_8_GAUSS = 0b01,  ///< +/- 8g
-#   LIS3MDL_RANGE_12_GAUSS = 0b10, ///< +/- 12g
-#   LIS3MDL_RANGE_16_GAUSS = 0b11, ///< +/- 16g
-# } lis3mdl_range_t;
+class CV:
+    """struct helper"""
+
+    @classmethod
+    def add_values(cls, value_tuples):
+        "creates CV entires"
+        cls.string = {}
+        cls.lsb = {}
+
+        for value_tuple in value_tuples:
+            name, value, string, lsb = value_tuple
+            setattr(cls, name, value)
+            cls.string[value] = string
+            cls.lsb[value] = lsb
+
+    @classmethod
+    def is_valid(cls, value):
+        "Returns true if the given value is a member of the CV"
+        return value in cls.string
+
+class Range(CV):
+    """Options for ``accelerometer_range``"""
+    pass #pylint: disable=unnecessary-pass
+
+Range.add_values((
+    ('RANGE_4_GAUSS', 0, 4, 6842),
+    ('RANGE_8_GAUSS', 1, 8, 3421),
+    ('RANGE_12_GAUSS', 2, 12, 2281),
+    ('RANGE_16_GAUSS', 3, 16, 1711)
+))
 
 
 # lis3mdl_range_t range = getRange();
@@ -92,7 +115,6 @@ _GAUSS_TO_MT = 0.1 #1 Gauss [G] =   0.1 Millitesla [mT]
 #     scale = 3421;
 # if (range == LIS3MDL_RANGE_4_GAUSS)
 #     scale = 6842;
-
 
 # /** The magnetometer data rate, includes FAST_ODR bit */
 # typedef enum {
@@ -155,27 +177,56 @@ class LIS3MDL:
         # // 155Hz default rate
         # setDataRate(LIS3MDL_DATARATE_155_HZ);
 
-        # // lowest range
-        # setRange(LIS3MDL_RANGE_4_GAUSS);
-        self._range = 0
+
+        self.range = Range.RANGE_4_GAUSS #pylint: disable=no-member
 
         # setOperationMode(LIS3MDL_CONTINUOUSMODE);
-        self._operation_mode = 0
+        self._operation_mode = 0 # enable, take out of shutdown
+        sleep(0.010)
     def reset(self): #pylint: disable=no-self-use
         """Reset the sensor to the default state set by the library"""
 
-        print("reeeset")
+        print("called reset")
+        # reset
+        # sleep(0.010)
 
     @property
     def magnetic(self):
         """How do they even work?!"""
 
         raw_mag_data = self._raw_mag_data
-        x = self._scale_mag_data(raw_mag_data[0]) * _GAUSS_TO_MT
-        y = self._scale_mag_data(raw_mag_data[1]) * _GAUSS_TO_MT
-        z = self._scale_mag_data(raw_mag_data[2]) * _GAUSS_TO_MT
-        return(x, y, z)
-    def _scale_mag_data(self, raw_measurement): #pylint: disable=no-self-use
+        x = self._scale_mag_data(raw_mag_data[0])
+        y = self._scale_mag_data(raw_mag_data[1])
+        z = self._scale_mag_data(raw_mag_data[2])
 
-        scale = 6842
-        return raw_measurement/scale
+        return(x, y, z)
+
+    def _scale_mag_data(self, raw_measurement): #pylint: disable=no-self-use
+        return (raw_measurement / Range.lsb[self.range]) * _GAUSS_TO_MT
+
+    @property
+    def range(self):
+        """The measurement range for the magnetic sensor. Must be a ``Range``"""
+        return self._range
+
+    @range.setter
+    def range(self, value):
+        if not Range.is_valid(value):
+            raise AttributeError("``range`` must be a ``Range``")
+
+        self._range = value
+
+        sleep(0.010)
+
+    # @property
+    # def data_rate(self):
+    #     """The rate at which the sensor takes measurements. Must be a ``Rate``"""
+    #     return self._data_rate
+
+    # @data_rate.setter
+    # def data_rate(self, value):
+    #     check value is valid
+    #     set performance mode
+    #     sleep(0.010)
+    #
+    #     self._data_rate = value
