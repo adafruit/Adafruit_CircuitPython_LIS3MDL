@@ -110,9 +110,9 @@ class PerformanceMode(CV):
 
 PerformanceMode.add_values((
     ('MODE_LOW_POWER', 0, 'Low Power', None),
-    ('MODE_MEDIUM', 1, 'Medium Power', None),
-    ('MODE_HIGH', 2, 'High Power', None),
-    ('MODE_ULTRA', 3, 'Ultra-high Power', None)
+    ('MODE_MEDIUM', 1, 'Medium Performance', None),
+    ('MODE_HIGH', 2, 'High Performance', None),
+    ('MODE_ULTRA', 3, 'Ultra-high Performance', None)
 ))
 class Rate(CV):
     """Options for `data_rate`"""
@@ -126,14 +126,18 @@ Rate.add_values((
     ('RATE_10_HZ', 0b1000, 10.0, None),
     ('RATE_20_HZ', 0b1010, 20.0, None),
     ('RATE_40_HZ', 0b1100, 40.0, None),
-    ('RATE_80_HZ', 0b1110, 80.0, None)
+    ('RATE_80_HZ', 0b1110, 80.0, None),
+    ('RATE_155_HZ', 0b0001, 155.0, None),
+    ('RATE_300_HZ', 0b0011, 300.0, None),
+    ('RATE_560_HZ', 0b0101, 560.0, None),
+    ('RATE_1000_HZ', 0b0111, 1000.0, None),
 ))
 # /** The magnetometer data rate, includes FAST_ODR bit */
 
-#   RATE_155_HZ = 0b0001,   ///<  155 Hz (FAST_ODR + UHP)
-#   RATE_300_HZ = 0b0011,   ///<  300 Hz (FAST_ODR + HP)
-#   RATE_560_HZ = 0b0101,   ///<  560 Hz (FAST_ODR + MP)
-#   RATE_1000_HZ = 0b0111,  ///<  1000 Hz (FAST_ODR + LP)
+#    = ,   ///<   Hz (FAST_ODR + UHP)
+#    = ,   ///<   Hz (FAST_ODR + HP)
+#    = ,   ///<   Hz (FAST_ODR + MP)
+#    = ,  ///<   Hz (FAST_ODR + LP)
 # } lis3mdl_dataRate_t;
 
 # /** The magnetometer operation mode */
@@ -222,16 +226,16 @@ class LIS3MDL:
 
     @data_rate.setter
     def data_rate(self, value):
-        # if
-        # if current_data_rate is Rate.RATE_155_HZ:
-        #     self.performance_mode = Mode.MODE_ULTRA
-        # if current_data_rate is Rate.RATE_300_H:
-        #     self.performance_mode = Mode.MODE_HIGH
-        # if current_data_rate is Rate.RATE_560_HZ:
-        #     self.performance_mode = Mode.MODE_MEDIUM
-        # if current_data_rate is Rate.RATE_1000_HZ:
-        #     self.performance_mode = Mode.MODE_LOW_POWER
-        # sleep(0.010)
+        #pylint: disable=no-member
+        if value is Rate.RATE_155_HZ:
+            self.performance_mode = PerformanceMode.MODE_ULTRA
+        if value is Rate.RATE_300_HZ:
+            self.performance_mode = PerformanceMode.MODE_HIGH
+        if value is Rate.RATE_560_HZ:
+            self.performance_mode = PerformanceMode.MODE_MEDIUM
+        if value is Rate.RATE_1000_HZ:
+            self.performance_mode = PerformanceMode.MODE_LOW_POWER
+        sleep(0.010)
         if not Rate.is_valid(value):
             raise AttributeError("`data_rate` must be a `Rate`")
         self._data_rate = value
@@ -242,10 +246,11 @@ class LIS3MDL:
            Note that `performance_mode` affects the available data rate and will be
            automatically changed by setting ``data_rate`` to certain values."""
 
-        return self._data_rate
+        return self._perf_mode
 
     @performance_mode.setter
     def performance_mode(self, value):
-        #TODO: check value
+        if not PerformanceMode.is_valid(value):
+            raise AttributeError("`performance_mode` must be a `PerformanceMode`")
         self._perf_mode = value
         self._z_perf_mode = value
