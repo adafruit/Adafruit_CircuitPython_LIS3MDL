@@ -2,7 +2,7 @@ Introduction
 ============
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-lis3mdl/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/lis3mdl/en/latest/
+    :target: https://adafruit-circuitpython-lis3mdl.readthedocs.io/en/latest/
     :alt: Documentation Status
 
 .. image:: https://img.shields.io/discord/327254708534116352.svg
