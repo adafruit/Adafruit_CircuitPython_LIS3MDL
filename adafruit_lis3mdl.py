@@ -72,7 +72,7 @@ _LIS3MDL_OUT_X_L = const(0x28)   # Register address for X axis lower byte
 _LIS3MDL_INT_CFG = const(0x30)   # Interrupt configuration register
 _LIS3MDL_INT_THS_L = const(0x32) # Low byte of the irq threshold
 
-_GAUSS_TO_MT = 0.1 #1 Gauss [G] =   0.1 Millitesla [mT]
+_GAUSS_TO_MT = 100
 
 class CV:
     """struct helper"""
