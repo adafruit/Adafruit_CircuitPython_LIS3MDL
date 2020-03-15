@@ -49,6 +49,7 @@ import adafruit_bus_device.i2c_device as i2c_device
 from adafruit_register.i2c_struct import ROUnaryStruct, Struct
 from adafruit_register.i2c_bits import RWBits
 from adafruit_register.i2c_bit import RWBit
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_LSM6DSOX.git"
 
@@ -64,15 +65,16 @@ __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_LIS3MDL.git"
 
 _LIS3MDL_WHO_AM_I = const(0x0F)  # Register that contains the part ID
-_LIS3MDL_CTRL_REG1 = const(0x20) # Register address for control 1
-_LIS3MDL_CTRL_REG2 = const(0x21) # Register address for control 2
-_LIS3MDL_CTRL_REG3 = const(0x22) # Register address for control 3
-_LIS3MDL_CTRL_REG4 = const(0x23) # Register address for control 3
-_LIS3MDL_OUT_X_L = const(0x28)   # Register address for X axis lower byte
-_LIS3MDL_INT_CFG = const(0x30)   # Interrupt configuration register
-_LIS3MDL_INT_THS_L = const(0x32) # Low byte of the irq threshold
+_LIS3MDL_CTRL_REG1 = const(0x20)  # Register address for control 1
+_LIS3MDL_CTRL_REG2 = const(0x21)  # Register address for control 2
+_LIS3MDL_CTRL_REG3 = const(0x22)  # Register address for control 3
+_LIS3MDL_CTRL_REG4 = const(0x23)  # Register address for control 3
+_LIS3MDL_OUT_X_L = const(0x28)  # Register address for X axis lower byte
+_LIS3MDL_INT_CFG = const(0x30)  # Interrupt configuration register
+_LIS3MDL_INT_THS_L = const(0x32)  # Low byte of the irq threshold
 
 _GAUSS_TO_UT = 100
+
 
 class CV:
     """struct helper"""
@@ -94,27 +96,39 @@ class CV:
         "Returns true if the given value is a member of the CV"
         return value in cls.string
 
+
 class Range(CV):
     """Options for ``accelerometer_range``"""
-    pass #pylint: disable=unnecessary-pass
 
-Range.add_values((
-    ('RANGE_4_GAUSS', 0, 4, 6842),
-    ('RANGE_8_GAUSS', 1, 8, 3421),
-    ('RANGE_12_GAUSS', 2, 12, 2281),
-    ('RANGE_16_GAUSS', 3, 16, 1711)
-))
+    pass  # pylint: disable=unnecessary-pass
+
+
+Range.add_values(
+    (
+        ("RANGE_4_GAUSS", 0, 4, 6842),
+        ("RANGE_8_GAUSS", 1, 8, 3421),
+        ("RANGE_12_GAUSS", 2, 12, 2281),
+        ("RANGE_16_GAUSS", 3, 16, 1711),
+    )
+)
+
 
 class PerformanceMode(CV):
     """Options for `performance_mode` """
-    pass #pylint: disable=unnecessary-pass
 
-PerformanceMode.add_values((
-    ('MODE_LOW_POWER', 0, 'Low Power', None),
-    ('MODE_MEDIUM', 1, 'Medium Performance', None),
-    ('MODE_HIGH', 2, 'High Performance', None),
-    ('MODE_ULTRA', 3, 'Ultra-high Performance', None)
-))
+    pass  # pylint: disable=unnecessary-pass
+
+
+PerformanceMode.add_values(
+    (
+        ("MODE_LOW_POWER", 0, "Low Power", None),
+        ("MODE_MEDIUM", 1, "Medium Performance", None),
+        ("MODE_HIGH", 2, "High Performance", None),
+        ("MODE_ULTRA", 3, "Ultra-high Performance", None),
+    )
+)
+
+
 class Rate(CV):
     """Options for `data_rate`
 
@@ -136,23 +150,28 @@ class Rate(CV):
     =============================  ============================================
 
     """
-    pass #pylint: disable=unnecessary-pass
+
+    pass  # pylint: disable=unnecessary-pass
+
 
 # The magnetometer data rate, includes FAST_ODR bit
-Rate.add_values((
-    ('RATE_0_625_HZ', 0b0000, 0.625, None),
-    ('RATE_1_25_HZ', 0b0010, 1.25, None),
-    ('RATE_2_5_HZ', 0b0100, 2.5, None),
-    ('RATE_5_HZ', 0b0110, 5.0, None),
-    ('RATE_10_HZ', 0b1000, 10.0, None),
-    ('RATE_20_HZ', 0b1010, 20.0, None),
-    ('RATE_40_HZ', 0b1100, 40.0, None),
-    ('RATE_80_HZ', 0b1110, 80.0, None),
-    ('RATE_155_HZ', 0b0001, 155.0, None),
-    ('RATE_300_HZ', 0b0011, 300.0, None),
-    ('RATE_560_HZ', 0b0101, 560.0, None),
-    ('RATE_1000_HZ', 0b0111, 1000.0, None),
-))
+Rate.add_values(
+    (
+        ("RATE_0_625_HZ", 0b0000, 0.625, None),
+        ("RATE_1_25_HZ", 0b0010, 1.25, None),
+        ("RATE_2_5_HZ", 0b0100, 2.5, None),
+        ("RATE_5_HZ", 0b0110, 5.0, None),
+        ("RATE_10_HZ", 0b1000, 10.0, None),
+        ("RATE_20_HZ", 0b1010, 20.0, None),
+        ("RATE_40_HZ", 0b1100, 40.0, None),
+        ("RATE_80_HZ", 0b1110, 80.0, None),
+        ("RATE_155_HZ", 0b0001, 155.0, None),
+        ("RATE_300_HZ", 0b0011, 300.0, None),
+        ("RATE_560_HZ", 0b0101, 560.0, None),
+        ("RATE_1000_HZ", 0b0111, 1000.0, None),
+    )
+)
+
 
 class OperationMode(CV):
     """Options for `operation_mode`
@@ -166,13 +185,17 @@ class OperationMode(CV):
     =============================  ============================================
 
 """
-    pass #pylint: disable=unnecessary-pass
 
-OperationMode.add_values((
-    ('CONTINUOUS', 0b00, 'Continuous', None),
-    ('SINGLE', 0b01, 'Single', None),
-    ('POWER_DOWN', 0b11, 'Power Down', None)
-))
+    pass  # pylint: disable=unnecessary-pass
+
+
+OperationMode.add_values(
+    (
+        ("CONTINUOUS", 0b00, "Continuous", None),
+        ("SINGLE", 0b01, "Single", None),
+        ("POWER_DOWN", 0b11, "Power Down", None),
+    )
+)
 # /** The magnetometer operation mode */
 # typedef enum {
 #   LIS3MDL_CONTINUOUSMODE = , ///< Continuous conversion
@@ -180,11 +203,13 @@ OperationMode.add_values((
 #   LIS3MDL_POWERDOWNMODE = ,  ///< Powered-down mode
 # } lis3mdl_operationmode_t;
 
+
 class LIS3MDL:
     """Driver for the LIS3MDL 3-axis magnetometer.
         :param ~busio.I2C i2c_bus: The I2C bus the LIS3MDL is connected to.
         :param address: The I2C slave address of the sensor
     """
+
     _chip_id = ROUnaryStruct(_LIS3MDL_WHOAMI, "<b")
 
     _perf_mode = RWBits(2, _LIS3MDL_CTRL_REG1, 5)
@@ -200,7 +225,7 @@ class LIS3MDL:
     _reset = RWBit(_LIS3MDL_CTRL_REG2, 2)
 
     def __init__(self, i2c_bus, address=_LIS3MDL_DEFAULT_ADDRESS):
-        #pylint: disable=no-member
+        # pylint: disable=no-member
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         if self._chip_id != _LIS3MDL_CHIP_ID:
             raise RuntimeError("Failed to find LIS3MDL - check your wiring!")
@@ -214,7 +239,7 @@ class LIS3MDL:
 
         sleep(0.010)
 
-    def reset(self): #pylint: disable=no-self-use
+    def reset(self):  # pylint: disable=no-self-use
         """Reset the sensor to the default state set by the library"""
         self._reset = True
         sleep(0.010)
@@ -230,9 +255,9 @@ class LIS3MDL:
         y = self._scale_mag_data(raw_mag_data[1])
         z = self._scale_mag_data(raw_mag_data[2])
 
-        return(x, y, z)
+        return (x, y, z)
 
-    def _scale_mag_data(self, raw_measurement): #pylint: disable=no-self-use
+    def _scale_mag_data(self, raw_measurement):  # pylint: disable=no-self-use
         return (raw_measurement / Range.lsb[self.range]) * _GAUSS_TO_UT
 
     @property
@@ -256,7 +281,7 @@ class LIS3MDL:
 
     @data_rate.setter
     def data_rate(self, value):
-        #pylint: disable=no-member
+        # pylint: disable=no-member
         if value is Rate.RATE_155_HZ:
             self.performance_mode = PerformanceMode.MODE_ULTRA
         if value is Rate.RATE_300_HZ:

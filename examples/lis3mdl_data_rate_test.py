@@ -1,6 +1,6 @@
 """ Test Each Data Rate """
 
-#pylint: disable=no-member
+# pylint: disable=no-member
 import time
 import board
 import busio
@@ -17,12 +17,12 @@ print("performance_mode is", PerformanceMode.string[sensor.performance_mode])
 while True:
     mag_x, mag_y, mag_z = sensor.magnetic
 
-    print('X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} uT'.format(mag_x, mag_y, mag_z))
+    print("X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} uT".format(mag_x, mag_y, mag_z))
 
     # sleep for enough time so that we'll read the value twice per measurement
-    sleep_time = (1/(Rate.string[current_rate]*2))
+    sleep_time = 1 / (Rate.string[current_rate] * 2)
     time.sleep(sleep_time)
 
     # exit loop after a second to prevent hard to stop loops with short delays
-    if (time.monotonic() - start_time) >1:
+    if (time.monotonic() - start_time) > 1:
         break
