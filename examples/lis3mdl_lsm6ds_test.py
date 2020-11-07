@@ -1,6 +1,6 @@
 import time
 import board
-from adafruit_lsm6ds.lsm6Dsox import LSM6DSOX as LSM6DS
+from adafruit_lsm6ds.lsm6dsox import LSM6DSOX as LSM6DS
 
 # To use LSM6DS33, comment out the LSM6DSOX import line
 # and uncomment the next line
