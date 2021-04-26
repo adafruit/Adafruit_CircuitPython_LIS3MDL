@@ -6,3 +6,4 @@
 
 .. automodule:: adafruit_lis3mdl
    :members:
+   :exclude-members: CV, Range, PerformanceMode

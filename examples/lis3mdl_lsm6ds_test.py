@@ -15,8 +15,9 @@ from adafruit_lsm6ds.lsm6dsox import LSM6DSOX as LSM6DS
 
 from adafruit_lis3mdl import LIS3MDL
 
-accel_gyro = LSM6DS(board.I2C())
-mag = LIS3MDL(board.I2C())
+i2c = board.I2C()  # uses board.SCL and board.SDA
+accel_gyro = LSM6DS(i2c)
+mag = LIS3MDL(i2c)
 
 while True:
     acceleration = accel_gyro.acceleration

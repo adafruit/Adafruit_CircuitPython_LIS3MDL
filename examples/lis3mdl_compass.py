@@ -5,10 +5,9 @@
 import time
 from math import atan2, degrees
 import board
-import busio
 import adafruit_lis3mdl
 
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = adafruit_lis3mdl.LIS3MDL(i2c)
 
 
