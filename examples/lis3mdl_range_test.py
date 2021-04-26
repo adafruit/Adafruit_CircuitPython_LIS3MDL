@@ -5,10 +5,9 @@
 # pylint: disable=no-member
 import time
 import board
-import busio
 from adafruit_lis3mdl import LIS3MDL, Range
 
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = LIS3MDL(i2c)
 
 while True:

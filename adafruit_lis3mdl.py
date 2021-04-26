@@ -20,7 +20,7 @@ Implementation Notes
 **Software and Dependencies:**
 
 * Adafruit CircuitPython firmware for the supported boards:
-  https://github.com/adafruit/circuitpython/releases
+  https://circuitpython.org/downloads
 
 
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
@@ -188,8 +188,34 @@ OperationMode.add_values(
 
 class LIS3MDL:
     """Driver for the LIS3MDL 3-axis magnetometer.
+
     :param ~busio.I2C i2c_bus: The I2C bus the LIS3MDL is connected to.
-    :param address: The I2C slave address of the sensor
+    :param address: The I2C device address. Defaults to :const:`0x1C`
+
+    **Quickstart: Importing and using the device**
+
+        Here is an example of using the :class:`LIS3MDL` class.
+        First you will need to import the libraries to use the sensor
+
+        .. code-block:: python
+
+            import board
+            import adafruit_lis3mdl
+
+        Once this is done you can define your `board.I2C` object and define your sensor object
+
+        .. code-block:: python
+
+            i2c = board.I2C()
+            sensor = adafruit_lis3mdl.LIS3MDL(i2c)
+
+        Now you have access to the :attr:`magnetic` attribute
+
+        .. code-block:: python
+
+            mag_x, mag_y, mag_z = sensor.magnetic
+
+
     """
 
     _chip_id = ROUnaryStruct(_LIS3MDL_WHOAMI, "<b")
@@ -279,7 +305,7 @@ class LIS3MDL:
 
     @property
     def performance_mode(self):
-        """Sets the 'performance mode' of the sensor. Must be a `PerformanceMode`.
+        """Sets the 'performance mode' of the sensor. Must be a ``PerformanceMode``.
         Note that `performance_mode` affects the available data rate and will be
         automatically changed by setting ``data_rate`` to certain values."""
 
