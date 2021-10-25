@@ -72,6 +72,11 @@ Usage Example
         print('')
         time.sleep(1.0)
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/lis3mdl/en/latest/>`_.
+
 Contributing
 ============
 
