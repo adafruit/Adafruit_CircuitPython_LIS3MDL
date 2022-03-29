@@ -97,7 +97,7 @@ Range.add_values(
 
 
 class PerformanceMode(CV):
-    """Options for `performance_mode` """
+    """Options for `performance_mode`"""
 
     pass  # pylint: disable=unnecessary-pass
 
