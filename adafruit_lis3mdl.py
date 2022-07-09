@@ -34,7 +34,7 @@ from adafruit_register.i2c_bits import RWBits
 from adafruit_register.i2c_bit import RWBit
 
 __version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_LSM6DSOX.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_LIS3MDL.git"
 
 
 _LIS3MDL_DEFAULT_ADDRESS = const(0x1C)
@@ -42,10 +42,6 @@ _LIS3MDL_DEFAULT_ADDRESS = const(0x1C)
 _LIS3MDL_CHIP_ID = const(0x3D)
 
 _LIS3MDL_WHOAMI = const(0xF)
-
-
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_LIS3MDL.git"
 
 _LIS3MDL_WHO_AM_I = const(0x0F)  # Register that contains the part ID
 _LIS3MDL_CTRL_REG1 = const(0x20)  # Register address for control 1
