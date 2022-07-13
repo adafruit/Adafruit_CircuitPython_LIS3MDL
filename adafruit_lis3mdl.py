@@ -33,6 +33,12 @@ from adafruit_register.i2c_struct import ROUnaryStruct, Struct
 from adafruit_register.i2c_bits import RWBits
 from adafruit_register.i2c_bit import RWBit
 
+try:
+    from typing import Iterable, Tuple, Union, Optional
+    from busio import I2C
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_LIS3MDL.git"
 
@@ -59,7 +65,7 @@ class CV:
     """struct helper"""
 
     @classmethod
-    def add_values(cls, value_tuples):
+    def add_values(cls, value_tuples: Iterable[Tuple[str, int, Union[int, str], Optional[int]]]):
         "creates CV entires"
         cls.string = {}
         cls.lsb = {}
@@ -71,7 +77,7 @@ class CV:
             cls.lsb[value] = lsb
 
     @classmethod
-    def is_valid(cls, value):
+    def is_valid(cls, value: int) -> bool:
         "Returns true if the given value is a member of the CV"
         return value in cls.string
 
@@ -178,7 +184,7 @@ class LIS3MDL:
     """Driver for the LIS3MDL 3-axis magnetometer.
 
     :param ~busio.I2C i2c_bus: The I2C bus the LIS3MDL is connected to.
-    :param address: The I2C device address. Defaults to :const:`0x1C`
+    :param int address: The I2C device address. Defaults to :const:`0x1C`
 
     **Quickstart: Importing and using the device**
 
@@ -220,7 +226,7 @@ class LIS3MDL:
     _range = RWBits(2, _LIS3MDL_CTRL_REG2, 5)
     _reset = RWBit(_LIS3MDL_CTRL_REG2, 2)
 
-    def __init__(self, i2c_bus, address=_LIS3MDL_DEFAULT_ADDRESS):
+    def __init__(self, i2c_bus: I2C, address: int = _LIS3MDL_DEFAULT_ADDRESS) -> None:
         # pylint: disable=no-member
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         if self._chip_id != _LIS3MDL_CHIP_ID:
@@ -235,13 +241,13 @@ class LIS3MDL:
 
         sleep(0.010)
 
-    def reset(self):  # pylint: disable=no-self-use
+    def reset(self) -> None:
         """Reset the sensor to the default state set by the library"""
         self._reset = True
         sleep(0.010)
 
     @property
-    def magnetic(self):
+    def magnetic(self) -> Tuple[float, float, float]:
         """The processed magnetometer sensor values.
         A 3-tuple of X, Y, Z axis values in microteslas that are signed floats.
         """
@@ -253,16 +259,16 @@ class LIS3MDL:
 
         return (x, y, z)
 
-    def _scale_mag_data(self, raw_measurement):  # pylint: disable=no-self-use
+    def _scale_mag_data(self, raw_measurement: int) -> float:
         return (raw_measurement / Range.lsb[self.range]) * _GAUSS_TO_UT
 
     @property
-    def range(self):
+    def range(self) -> int:
         """The measurement range for the magnetic sensor. Must be a ``Range``"""
         return self._range
 
     @range.setter
-    def range(self, value):
+    def range(self, value: int) -> None:
         if not Range.is_valid(value):
             raise AttributeError("``range`` must be a ``Range``")
 
@@ -271,12 +277,12 @@ class LIS3MDL:
         sleep(0.010)
 
     @property
-    def data_rate(self):
+    def data_rate(self) -> int:
         """The rate at which the sensor takes measurements. Must be a ``Rate``"""
         return self._data_rate
 
     @data_rate.setter
-    def data_rate(self, value):
+    def data_rate(self, value: int) -> None:
         # pylint: disable=no-member
         if value is Rate.RATE_155_HZ:
             self.performance_mode = PerformanceMode.MODE_ULTRA
@@ -292,7 +298,7 @@ class LIS3MDL:
         self._data_rate = value
 
     @property
-    def performance_mode(self):
+    def performance_mode(self) -> int:
         """Sets the 'performance mode' of the sensor. Must be a ``PerformanceMode``.
         Note that `performance_mode` affects the available data rate and will be
         automatically changed by setting ``data_rate`` to certain values."""
@@ -300,21 +306,21 @@ class LIS3MDL:
         return self._perf_mode
 
     @performance_mode.setter
-    def performance_mode(self, value):
+    def performance_mode(self, value: int) -> None:
         if not PerformanceMode.is_valid(value):
             raise AttributeError("`performance_mode` must be a `PerformanceMode`")
         self._perf_mode = value
         self._z_perf_mode = value
 
     @property
-    def operation_mode(self):
+    def operation_mode(self) -> int:
         """The operating mode for the sensor, controlling how measurements are taken.
         Must be an `OperationMode`. See the the `OperationMode` document for additional details
         """
         return self._operation_mode
 
     @operation_mode.setter
-    def operation_mode(self, value):
+    def operation_mode(self, value: int) -> None:
         if not OperationMode.is_valid(value):
             raise AttributeError("operation mode must be a OperationMode")
         self._operation_mode = value
