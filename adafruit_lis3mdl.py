@@ -93,8 +93,6 @@ Range.add_values(
 class PerformanceMode(CV):
     """Options for `performance_mode`"""
 
-    pass  # pylint: disable=unnecessary-pass
-
 
 PerformanceMode.add_values(
     (
@@ -128,8 +126,6 @@ class Rate(CV):
 
     """
 
-    pass  # pylint: disable=unnecessary-pass
-
 
 # The magnetometer data rate, includes FAST_ODR bit
 Rate.add_values(
@@ -161,8 +157,6 @@ class OperationMode(CV):
     ``OperationMode.POWER_DOWN``     Halts measurements. `magnetic` will return the last measurement
     =============================  ============================================
     """
-
-    pass  # pylint: disable=unnecessary-pass
 
 
 OperationMode.add_values(
