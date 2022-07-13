@@ -79,8 +79,6 @@ class CV:
 class Range(CV):
     """Options for ``accelerometer_range``"""
 
-    pass  # pylint: disable=unnecessary-pass
-
 
 Range.add_values(
     (
