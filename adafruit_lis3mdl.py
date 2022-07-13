@@ -65,7 +65,9 @@ class CV:
     """struct helper"""
 
     @classmethod
-    def add_values(cls, value_tuples: Iterable[Tuple[str, int, Union[int, str], Optional[int]]]):
+    def add_values(
+        cls, value_tuples: Iterable[Tuple[str, int, Union[int, str], Optional[int]]]
+    ):
         "creates CV entires"
         cls.string = {}
         cls.lsb = {}
