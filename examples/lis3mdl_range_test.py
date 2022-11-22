@@ -8,6 +8,7 @@ import board
 from adafruit_lis3mdl import LIS3MDL, Range
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
+# i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 sensor = LIS3MDL(i2c)
 
 while True:
