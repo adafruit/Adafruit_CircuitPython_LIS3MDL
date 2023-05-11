@@ -12,7 +12,6 @@ i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = LIS3MDL(i2c)
 
 while True:
-
     for mag_range in [
         Range.RANGE_4_GAUSS,
         Range.RANGE_8_GAUSS,
