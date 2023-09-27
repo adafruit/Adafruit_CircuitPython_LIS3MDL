@@ -10,7 +10,7 @@ the sensor with the earth's magnetic field for use as a compass.
 The calibrator measures the minimum and maximum values for each axis as
 the sensor is moved. The values are captured over a fixed number of
 samples. A middle-of-the-range calibration offset value is calculated
-and reported after all samples are collected. 
+and reported after all samples are collected.
 
 The sensor needs to be tumbled during the collection period in a manner
 that exercises the entire range of each axis. A series of overlapping
