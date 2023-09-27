@@ -2,20 +2,23 @@
 # SPDX-License-Identifier: MIT
 
 """
-lis3mdl_calibrator.py is a simple CircuitPython calibrator example for
-the LIS3MDL magnetometer. The calibrator measures the minimum and
-maximum values for each axis as the sensor is moved. The values are
-captured over a fixed number of samples. A middle-of-the-range
-calibration offset value is calculated and reported after all samples
-are collected.
+'lis3mdl_calibrator.py' is a simple CircuitPython calibrator example for
+the LIS3MDL magnetometer. The resultant offset values can be used to
+compensate for 'hard iron' effects, static magnetic fields, or to orient
+the sensor with the earth's magnetic field for use as a compass.
 
-The sensor needs to be moved during the collection period in a manner
+The calibrator measures the minimum and maximum values for each axis as
+the sensor is moved. The values are captured over a fixed number of
+samples. A middle-of-the-range calibration offset value is calculated
+and reported after all samples are collected. 
+
+The sensor needs to be tumbled during the collection period in a manner
 that exercises the entire range of each axis. A series of overlapping
 figure-eight patterns is recommended.
 
-This code was derived from the Blinka 9dof_calibration.py code in the
-'Adafruit SensorLab - Magnetometer Calibration' learning guide. The
-guide code was authored by Melissa LeBlanc-Williams (c)2020.
+This code was derived from the '9dof_calibration.py' Blinka code
+authored by Melissa LeBlanc-Williams for the 'Adafruit SensorLab -
+Magnetometer Calibration' learning guide (c)2020.
 """
 
 import time
@@ -31,7 +34,7 @@ magnetometer = LIS3MDL(i2c)
 while True:
     print("=" * 40)
     print("LIS3MDL MAGNETOMETER CALIBRATION")
-    print("  Move the sensor through a series of")
+    print("  Tumble the sensor through a series of")
     print("  overlapping figure-eight patterns")
     print(f"  for approximately {SAMPLE_SIZE/100:.0f} seconds \n")
 
@@ -39,8 +42,8 @@ while True:
     for i in range(5, -1, -1):
         print(i, end=" ")
         time.sleep(1)
-    print("MOVE the sensor...")
-    print("  >progress<")
+    print("\n  MOVE the sensor...")
+    print("  >     progress     <")
     print("  ", end="")
 
     # Initialize the min/max values
@@ -51,7 +54,7 @@ while True:
 
     for i in range(SAMPLE_SIZE):
         # Capture the samples and show the progress
-        if not (i % (SAMPLE_SIZE / 10)):
+        if not (i % (SAMPLE_SIZE / 20)):
             print("*", end="")
 
         mag_x, mag_y, mag_z = magnetometer.magnetic
