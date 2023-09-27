@@ -54,7 +54,7 @@ while True:
 
     for i in range(SAMPLE_SIZE):
         # Capture the samples and show the progress
-        if not (i % (SAMPLE_SIZE / 20)):
+        if not i % (SAMPLE_SIZE / 20):
             print("*", end="")
 
         mag_x, mag_y, mag_z = magnetometer.magnetic
