@@ -228,12 +228,16 @@ class LIS3MDL:
     _range = RWBits(2, _LIS3MDL_CTRL_REG2, 5)
     _reset = RWBit(_LIS3MDL_CTRL_REG2, 2)
 
-    def __init__(self, i2c_bus: I2C, address: int = _LIS3MDL_DEFAULT_ADDRESS,
-                 performance_mode: PerformanceMode = PerformanceMode.MODE_ULTRA,
-                 data_rate: Rate = Rate.RATE_155_HZ,
-                 range_: Range = Range.RANGE_4_GAUSS,
-                 operation_mode: OperationMode = OperationMode.CONTINUOUS) -> None:
-        # pylint: disable=no-member
+    def __init__(
+        self,
+        i2c_bus: I2C,
+        address: int = _LIS3MDL_DEFAULT_ADDRESS,
+        performance_mode: PerformanceMode = PerformanceMode.MODE_ULTRA,
+        data_rate: Rate = Rate.RATE_155_HZ,
+        range_: Range = Range.RANGE_4_GAUSS,
+        operation_mode: OperationMode = OperationMode.CONTINUOUS,
+    ) -> None:
+        # pylint: disable=no-member,too-many-arguments
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         if self._chip_id != _LIS3MDL_CHIP_ID:
             raise RuntimeError("Failed to find LIS3MDL - check your wiring!")
