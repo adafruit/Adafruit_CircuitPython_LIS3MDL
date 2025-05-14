@@ -1,12 +1,13 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
-""" Test Each Data Rate """
+"""Test Each Data Rate"""
 
-# pylint: disable=no-member
 import time
+
 import board
-from adafruit_lis3mdl import LIS3MDL, Rate, PerformanceMode
+
+from adafruit_lis3mdl import LIS3MDL, PerformanceMode, Rate
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
@@ -20,7 +21,7 @@ print("performance_mode is", PerformanceMode.string[sensor.performance_mode])
 while True:
     mag_x, mag_y, mag_z = sensor.magnetic
 
-    print("X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} uT".format(mag_x, mag_y, mag_z))
+    print(f"X:{mag_x:10.2f}, Y:{mag_y:10.2f}, Z:{mag_z:10.2f} uT")
 
     # sleep for enough time so that we'll read the value twice per measurement
     sleep_time = 1 / (Rate.string[current_rate] * 2)

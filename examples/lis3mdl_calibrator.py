@@ -22,8 +22,10 @@ Magnetometer Calibration' learning guide (c)2020.
 """
 
 import time
+
 import board
 import busio
+
 from adafruit_lis3mdl import LIS3MDL
 
 SAMPLE_SIZE = 2000
@@ -74,8 +76,6 @@ while True:
     offset_y = (max_y + min_y) / 2
     offset_z = (max_z + min_z) / 2
 
-    print(
-        f"\n\n  Final Calibration: X:{offset_x:6.2f} Y:{offset_y:6.2f} Z:{offset_z:6.2f} uT\n"
-    )
+    print(f"\n\n  Final Calibration: X:{offset_x:6.2f} Y:{offset_y:6.2f} Z:{offset_z:6.2f} uT\n")
 
     time.sleep(5)

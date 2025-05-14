@@ -1,10 +1,12 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
-""" Test Each range """
-# pylint: disable=no-member
+"""Test Each range"""
+
 import time
+
 import board
+
 from adafruit_lis3mdl import LIS3MDL, Range
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -22,6 +24,6 @@ while True:
         print("Range: %d Gauss" % Range.string[sensor.range])
         mag_x, mag_y, mag_z = sensor.magnetic
 
-        print("X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} uT".format(mag_x, mag_y, mag_z))
+        print(f"X:{mag_x:10.2f}, Y:{mag_y:10.2f}, Z:{mag_z:10.2f} uT")
         print("")
         time.sleep(0.3)

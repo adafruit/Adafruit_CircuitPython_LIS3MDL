@@ -1,10 +1,13 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
-""" Display compass heading data five times per second """
+"""Display compass heading data five times per second"""
+
 import time
 from math import atan2, degrees
+
 import board
+
 import adafruit_lis3mdl
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -25,5 +28,5 @@ def get_heading(_sensor):
 
 
 while True:
-    print("heading: {:.2f} degrees".format(get_heading(sensor)))
+    print(f"heading: {get_heading(sensor):.2f} degrees")
     time.sleep(0.2)
