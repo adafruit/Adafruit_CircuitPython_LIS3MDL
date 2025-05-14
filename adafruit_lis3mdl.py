@@ -26,15 +26,18 @@ Implementation Notes
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 * Adafruit's Register library: https://github.com/adafruit/Adafruit_CircuitPython_Register
 """
+
 from time import sleep
-from micropython import const
+
 from adafruit_bus_device import i2c_device
-from adafruit_register.i2c_struct import ROUnaryStruct, Struct
-from adafruit_register.i2c_bits import RWBits
 from adafruit_register.i2c_bit import RWBit
+from adafruit_register.i2c_bits import RWBits
+from adafruit_register.i2c_struct import ROUnaryStruct, Struct
+from micropython import const
 
 try:
-    from typing import Iterable, Tuple, Union, Optional
+    from typing import Iterable, Optional, Tuple, Union
+
     from busio import I2C
 except ImportError:
     pass
@@ -65,9 +68,7 @@ class CV:
     """struct helper"""
 
     @classmethod
-    def add_values(
-        cls, value_tuples: Iterable[Tuple[str, int, Union[int, str], Optional[int]]]
-    ):
+    def add_values(cls, value_tuples: Iterable[Tuple[str, int, Union[int, str], Optional[int]]]):
         "creates CV entires"
         cls.string = {}
         cls.lsb = {}
@@ -237,7 +238,6 @@ class LIS3MDL:
         range_: Range = Range.RANGE_4_GAUSS,
         operation_mode: OperationMode = OperationMode.CONTINUOUS,
     ) -> None:
-        # pylint: disable=no-member,too-many-arguments
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         if self._chip_id != _LIS3MDL_CHIP_ID:
             raise RuntimeError("Failed to find LIS3MDL - check your wiring!")
@@ -292,7 +292,6 @@ class LIS3MDL:
 
     @data_rate.setter
     def data_rate(self, value: int) -> None:
-        # pylint: disable=no-member
         if value is Rate.RATE_155_HZ:
             self.performance_mode = PerformanceMode.MODE_ULTRA
         if value is Rate.RATE_300_HZ:
