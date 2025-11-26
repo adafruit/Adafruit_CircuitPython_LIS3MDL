@@ -33,8 +33,8 @@ LSM6DS Test
 
 Test the LSM6DS device
 
-.. literalinclude:: ../examples/lis3mdl_lsm6ds_test.py
-    :caption: examples/lis3mdl_lsm6ds_test.py
+.. literalinclude:: ../examples/lis3mdl_lsm6ds3trc_test.py
+    :caption: examples/lis3mdl_lsm6ds3trc_test.py
     :linenos:
 
 Range Test
