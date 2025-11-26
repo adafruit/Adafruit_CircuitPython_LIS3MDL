@@ -14,7 +14,7 @@ from adafruit_lsm6ds.lsm6dsox import LSM6DSOX as LSM6DS
 # from adafruit_lsm6ds.lsm330dhcx import ISM330DHCX as LSM6DS
 # To use LSM6DS3TR-C, comment out the LSM6DSOX import line
 # and uncomment the next line
-# from adafruit_lsm6ds.lsm6ds3 import LSM6DS3 as LSM6DS
+# from adafruit_lsm6ds.lsm6ds3trc import LSM6DS3TRC as LSM6DS
 from adafruit_lis3mdl import LIS3MDL
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
