@@ -21,7 +21,7 @@ while True:
         Range.RANGE_16_GAUSS,
     ]:
         sensor.range = mag_range
-        print("Range: %d Gauss" % Range.string[sensor.range])
+        print(f"Range: {Range.string[sensor.range]:d} Gauss")
         mag_x, mag_y, mag_z = sensor.magnetic
 
         print(f"X:{mag_x:10.2f}, Y:{mag_y:10.2f}, Z:{mag_z:10.2f} uT")

@@ -38,7 +38,7 @@ while True:
     print("LIS3MDL MAGNETOMETER CALIBRATION")
     print("  Tumble the sensor through a series of")
     print("  overlapping figure-eight patterns")
-    print(f"  for approximately {SAMPLE_SIZE/100:.0f} seconds \n")
+    print(f"  for approximately {SAMPLE_SIZE / 100:.0f} seconds \n")
 
     print("  countdown to start:", end=" ")
     for i in range(5, -1, -1):
